@@ -10,19 +10,16 @@ const StyledNav = styled.nav`
 	display: flex;
 	justify-content: space-around;
 	background-color: ${({ theme }) => theme.colors.navBar};
-	box-shadow: 0px 0px 5px black;
-	z-index: 10;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
 `
 
 const StyledNavLink = styled(NavLink)`
 	width: 5rem;
-	text-decoration: none;
 	color: ${({ theme }) => theme.colors.subText};
 	transition: all 0.1s linear;
 	text-align: center;
 	padding: 0.5rem 0;
 	font-size: 0.8rem;
-	-webkit-tap-highlight-color: transparent;
 	svg {
 		stroke: ${({ theme }) => theme.colors.subText};
 		width: auto;
@@ -44,7 +41,7 @@ const StyledNavLink = styled(NavLink)`
 export default function NavBar() {
 	return (
 		<StyledNav>
-			<StyledNavLink exact to='/'>
+			<StyledNavLink to='/' isActive={(_, { pathname }) => pathname === '/' || pathname.includes('/movie')}>
 				<svg viewBox='0 0 512 512'>
 					<rect x={48} y={96} width={416} height={320} rx={28} ry={28} fill='none' strokeLinejoin='round' strokeWidth={32} />
 					<rect x={384} y={336} width={80} height={80} rx={28} ry={28} fill='none' strokeLinejoin='round' strokeWidth={32} />
