@@ -80,8 +80,8 @@ function ScanPage({ searchHandler, history }) {
 						.enumerateDevices()
 						.then((devices) => {
 							devices.forEach(function (device) {
-								//alert( JSON.stringify(device) );
-								if (device.kind == 'videoinput' && device.label.match(/back/) != null) {
+								// alert(JSON.stringify(device))
+								if (device.kind === 'videoinput' && device.label.match(/back/) != null) {
 									//alert("Back found!");
 									backCamID = device.deviceId
 								}
@@ -90,10 +90,6 @@ function ScanPage({ searchHandler, history }) {
 						.catch((err) => {
 							alert(console.log(err.message))
 						})
-
-					if (typeof backCamID == 'undefined') {
-						console.log('Back camera not found')
-					}
 
 					Quagga.init(
 						{
