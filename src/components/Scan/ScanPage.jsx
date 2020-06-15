@@ -74,12 +74,35 @@ function ScanPage({ searchHandler, history }) {
 				{ video: true },
 				() => {
 					setCameraAvailable(true)
+
+					let backCamID
+					navigator.mediaDevices
+						.enumerateDevices()
+						.then((devices) => {
+							devices.forEach(function (device) {
+								//alert( JSON.stringify(device) );
+								if (device.kind == 'videoinput' && device.label.match(/back/) != null) {
+									//alert("Back found!");
+									backCamID = device.deviceId
+								}
+							})
+						})
+						.catch((err) => {
+							alert(console.log(err.message))
+						})
+
+					if (typeof backCamID == 'undefined') {
+						console.log('Back camera not found')
+					}
+
 					Quagga.init(
 						{
 							inputStream: {
 								type: 'LiveStream',
 								constraints: {
-									facingMode: 'environment',
+									width: { min: 640 },
+									height: { min: 480 },
+									deviceId: backCamID,
 								},
 							},
 							locator: {
