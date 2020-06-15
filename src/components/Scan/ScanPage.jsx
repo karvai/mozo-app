@@ -65,6 +65,7 @@ function ScanPage({ searchHandler, history }) {
 	const [barcode, setBarcode] = useState()
 	const [movieTitle, setMovieTitle] = useState()
 	const [scanAgainToggle, setScanAgainToggle] = useState()
+	const [backCamera, setBackCamera] = useState([])
 	const [errorMessage, setErrorMessage] = useState(false)
 
 	useEffect(() => {
@@ -75,15 +76,12 @@ function ScanPage({ searchHandler, history }) {
 				() => {
 					setCameraAvailable(true)
 
-					let backCamID
 					navigator.mediaDevices
 						.enumerateDevices()
 						.then((devices) => {
-							devices.forEach(function (device) {
-								// alert(JSON.stringify(device))
-								if (device.kind === 'videoinput' && device.label.match(/back/) != null) {
-									//alert("Back found!");
-									backCamID = device.deviceId
+							devices.forEach((device) => {
+								if (device.kind === 'videoinput' && device.label.toLowerCase().includes('back')) {
+									setBackCamera((prev) => [...prev, device.deviceId])
 								}
 							})
 						})
@@ -96,9 +94,8 @@ function ScanPage({ searchHandler, history }) {
 							inputStream: {
 								type: 'LiveStream',
 								constraints: {
-									width: { min: 640 },
-									height: { min: 480 },
-									deviceId: backCamID,
+									facingMode: 'environment',
+									deviceId: backCamera[backCamera.length - 1],
 								},
 							},
 							locator: {
@@ -132,6 +129,7 @@ function ScanPage({ searchHandler, history }) {
 			)
 		// when unmounted stop quagga
 		return () => Quagga.stop()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [scanAgainToggle])
 
 	useEffect(() => {
