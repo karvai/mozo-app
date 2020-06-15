@@ -1,13 +1,13 @@
 export const lightTheme = {
 	colors: {
-		background: '#F2F2F2',
+		background: '#efefef',
 		backgroundTransparent: 'rgba(22, 32, 43, 0.6)',
-		text: '#252B33',
-		subText: '#E2E2E2',
+		text: 'black',
+		subText: '#484848',
 		primary: '#FF9329',
 		secondary: 'blue',
-		grey: '#555555',
-		navBar: '#555555',
+		grey: '#d4d4d4',
+		navBar: '#dadada',
 	},
 }
 

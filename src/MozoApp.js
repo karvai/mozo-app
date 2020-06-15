@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import MoviesPage from './components/Movies/MoviesPage'
 import ScanPage from './components/Scan/ScanPage'
 import ProfilePage from './components/Profile/ProfilePage'
-import SignInPage from './components/Profile/SignInPage'
 import NavBar from './components/NavBar'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import { lightTheme, darkTheme } from './styles/themes'
@@ -19,10 +18,15 @@ const BottomPadding = styled.div`
 export default function MozoApp() {
 	const [searchQuery, setSearchQuery] = useState('')
 	const [currentUser, setCurrentUser] = useState()
+	const [isDarkTheme, setIsDarkTheme] = useState(!!localStorage.getItem('isDarkTheme') ? JSON.parse(localStorage.getItem('isDarkTheme').toLowerCase()) : true)
 
 	useEffect(() => {
 		base.auth().onAuthStateChanged(setCurrentUser)
 	}, [])
+
+	useEffect(() => {
+		localStorage.setItem('isDarkTheme', isDarkTheme)
+	}, [isDarkTheme])
 
 	const searchHandler = (word) => {
 		if (word !== '') {
@@ -33,7 +37,7 @@ export default function MozoApp() {
 	}
 
 	return (
-		<ThemeProvider theme={darkTheme}>
+		<ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
 			<GlobalStyles />
 			<BrowserRouter>
 				<BottomPadding>
@@ -42,11 +46,10 @@ export default function MozoApp() {
 						<Route exact path={['/movie', '/movie/p']}>
 							<Redirect to='/' />
 						</Route>
-						<Route exact path='/movie/:id' render={() => <MovieDetailPage currentUser={currentUser} />} />
+						<Route exact path='/movie/:id' render={() => <MovieDetailPage currentUser={currentUser} isDarkTheme={isDarkTheme} />} />
 						<Route exact path='/movie/p/:id' component={MoviePersonPage} />
 						<Route exact path='/scan' render={() => <ScanPage searchHandler={searchHandler} />} />
-						<Route exact path='/profile' render={() => <ProfilePage currentUser={currentUser} />} />
-						<Route exact path='/profile/login' render={() => <SignInPage currentUser={currentUser} />} />
+						<Route exact path='/profile' render={() => <ProfilePage currentUser={currentUser} setIsDarkTheme={setIsDarkTheme} />} />
 					</Switch>
 				</BottomPadding>
 				<NavBar />

@@ -50,10 +50,28 @@ export const GlobalStyles = createGlobalStyle`
 	border-radius: 2rem;
 	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
 	cursor: pointer;
+	transition: all 0.3s linear;
 	:focus {
 		outline: none;
 	}
 }
 
+	.buttonCircle {
+	margin: 0 .5rem;
+	padding: 2px;
+	width: 60px;
+	height: 60px;
+}
+
+		.center {
+			display: flex;
+			justify-content: center;
+		}
+
+.error {
+			text-align: center;
+			font-size: 12px;
+			color: red;
+		}
 	
 `

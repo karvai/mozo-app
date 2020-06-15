@@ -36,14 +36,14 @@ export const ContentWrapper = styled.div`
 	}
 `
 
-const dictionary = ['<region 2 Dvd, Sealed>', '4k Ultra Hd', '(DVD + Ultraviolet Digital Copy)', '<region B Bluray, Sealed>']
+const dictionary = ['<region 2 Dvd, Sealed>', '<region 1 Dvd, Sealed>', '4k Ultra Hd', '(DVD + Ultraviolet Digital Copy)', '<region A Bluray, Sealed>', '<region B Bluray, Sealed>']
 
 const filterUsingDict = (word, dic) => {
 	let newWord = ''
-	dic.map((item) => {
+	dic.forEach((item) => {
 		newWord = word.toLowerCase().replace(item.toLowerCase(), '')
 	})
-	return newWord
+	return newWord.trim()
 }
 
 const orderOccurrence = (arr) => {
@@ -141,7 +141,7 @@ function ScanPage({ searchHandler, history }) {
 		<ContentWrapper>
 			{isCameraAvailable ? <p>Point your camera at a barcode and avoid glare and shadows</p> : <p>You need to allow camera in your browser to scan the barcode</p>}
 			<div id='interactive' className='viewport' />
-			{!!errorMessage && <p className='notFound'>We couldn't find this movie in database</p>}
+			{!!errorMessage && <p className='notFound'>Couldn't find this movie in database</p>}
 		</ContentWrapper>
 	)
 }

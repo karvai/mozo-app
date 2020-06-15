@@ -183,35 +183,8 @@ export default function ProfilePage({ currentUser, setIsDarkTheme }) {
 			.catch((e) => console.warn(e))
 	}
 
-	return !!currentUser ? (
-		<ProfileWrapper>
-			<h2>My collection</h2>
-			{myWishlistMovies.length !== 0 || myDVDMovies.length !== 0 || myBDMovies.length !== 0 || myUBDMovies.length !== 0 ? (
-				<>
-					{myWishlistMovies.length !== 0 && <MoviesSlider catTitle='Wish List' movies={myWishlistMovies} />}
-					{myDVDMovies.length !== 0 && <MoviesSlider catTitle='DVD' movies={myDVDMovies} />}
-					{myBDMovies.length !== 0 && <MoviesSlider catTitle='Blu-Ray' movies={myBDMovies} />}
-					{myUBDMovies.length !== 0 && <MoviesSlider catTitle='Ultra HD Blu-Ray' movies={myUBDMovies} />}
-				</>
-			) : (
-				<p className='center' style={{ padding: '50px 0' }}>
-					Start adding your movies to the collection in the Movies tab.
-				</p>
-			)}
-			{!!error && <p className='error'>{error}</p>}
-			<div className='center' style={{ margin: '10px 0' }}>
-				<button className='button' onClick={handleThemeChange}>
-					Theme
-				</button>
-				<button className='button' style={{ color: '#c51f1f' }} onClick={handleDeleteUser}>
-					Delete Account
-				</button>
-				<button className='button' onClick={handleSignOut}>
-					Sign Out
-				</button>
-			</div>
-		</ProfileWrapper>
-	) : (
+	return
+	;<>
 		<LoginWrapper>
 			<div className='form'>
 				<div className='lock'>
@@ -245,5 +218,5 @@ export default function ProfilePage({ currentUser, setIsDarkTheme }) {
 				</div>
 			</div>
 		</LoginWrapper>
-	)
+	</>
 }

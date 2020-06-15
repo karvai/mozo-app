@@ -11,7 +11,7 @@ export const SearchBar = styled.div`
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 	input {
 		width: 100%;
-		color: white;
+		color: ${({ theme }) => theme.colors.text};
 		border: none;
 		background-color: transparent;
 		margin: 0 1rem;
@@ -153,6 +153,7 @@ export const MovieDetailHeader = styled.header`
 		margin-top: 50px;
 	}
 	h2 {
+		color: white;
 		padding: 10px 5px;
 		display: block;
 		width: 100%;
@@ -161,6 +162,10 @@ export const MovieDetailHeader = styled.header`
 	p {
 		font-size: 0.8rem;
 		text-align: center;
+		color: #fafafa;
+	}
+	span {
+		color: #fafafa;
 	}
 	.genre {
 		margin-top: 20px;
@@ -179,6 +184,7 @@ export const MovieDetailHeader = styled.header`
 			}
 		}
 		span {
+			color: ${({ theme }) => theme.colors.text};
 			font-size: 12px;
 			vertical-align: 71%;
 			padding: 0.6rem;
@@ -245,9 +251,10 @@ export const MetacriticColor = styled.div`
 `
 
 export const Genre = styled.span`
-	color: ${({ theme }) => theme.colors.subText};
+	color: ${({ isDarkTheme }) => !isDarkTheme && 'black !important'};
 	font-size: 10px;
-	border: 1px solid ${({ theme }) => theme.colors.subText};
+	background-color: ${({ isDarkTheme }) => !isDarkTheme && '#fafafa'};
+	border: 1px solid #fafafa;
 	border-radius: 2rem;
 	padding: 2px 7px;
 	cursor: pointer;
@@ -302,6 +309,7 @@ export const PersonCard = styled.div`
 		border-radius: 5px;
 		background: linear-gradient(to bottom, transparent, black 110%);
 		position: absolute;
+		color: white;
 		right: 0;
 		left: 0;
 		bottom: 4px;
@@ -316,4 +324,9 @@ export const PersonCard = styled.div`
 			font-size: 7.5px;
 		}
 	}
+`
+
+export const SVG = styled.svg`
+	width: 40px;
+	vertical-align: -4px;
 `

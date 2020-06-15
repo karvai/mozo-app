@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { tmdbAPI } from '../../api/movieDB'
-import { Showroom, Title, ParagraphShortBio, CircleSeparator, MoviePersonHeader, Ambilight } from './styles'
-import { Link, withRouter } from 'react-router-dom'
+import { Title, ParagraphShortBio, CircleSeparator, MoviePersonHeader, Ambilight } from './styles'
+import { withRouter } from 'react-router-dom'
 import { formatDate, getFirstLastWord } from '../func'
 import MoviesSlider from './MoviesSlider'
 
