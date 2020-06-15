@@ -98,6 +98,7 @@ export default function ProfilePage({ currentUser, setIsDarkTheme }) {
 					setError()
 				})
 				.catch((e) => console.warn(e))
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cred])
 
 	useEffect(() => {
@@ -107,6 +108,7 @@ export default function ProfilePage({ currentUser, setIsDarkTheme }) {
 				.get()
 				.then((doc) => setMyCollection(doc.data()))
 				.catch((e) => console.warn(e))
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentUser])
 
 	useEffect(() => {
