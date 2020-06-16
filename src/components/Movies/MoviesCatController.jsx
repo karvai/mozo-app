@@ -8,7 +8,7 @@ function MoviesCatController({ catTitle, apiRequest }) {
 	useEffect(() => {
 		apiRequest(page)
 			.then((data) => setMovies({ ...data, results: [...movies.results, ...data.results] }))
-			.catch((e) => console.warn(e))
+			.catch((e) => console.error(e))
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [page])

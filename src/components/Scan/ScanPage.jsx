@@ -84,7 +84,7 @@ function ScanPage({ searchHandler, history }) {
 					})
 				})
 				.catch((err) => {
-					alert(console.log(err.message))
+					console.error(err.message)
 				})
 	}, [])
 
@@ -118,7 +118,7 @@ function ScanPage({ searchHandler, history }) {
 						},
 						(err) => {
 							if (err) {
-								console.log(err)
+								console.error(err)
 								return
 							}
 							Quagga.start()

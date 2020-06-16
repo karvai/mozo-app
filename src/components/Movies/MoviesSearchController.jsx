@@ -9,7 +9,7 @@ export default function MoviesSearchController({ apiRequest, searchQuery }) {
 		if (searchQuery !== '') {
 			apiRequest(searchQuery, page)
 				.then((data) => setMovies({ ...data, results: [...movies.results, ...data.results] }))
-				.catch((e) => console.warn(e))
+				.catch((e) => console.error(e))
 		} else {
 			setPage(1)
 			setMovies({ results: [] })
@@ -21,7 +21,7 @@ export default function MoviesSearchController({ apiRequest, searchQuery }) {
 		if (searchQuery !== '') {
 			apiRequest(searchQuery, 1)
 				.then((data) => setMovies(data))
-				.catch((e) => console.warn(e))
+				.catch((e) => console.error(e))
 		} else {
 			setPage(1)
 			setMovies({ results: [] })

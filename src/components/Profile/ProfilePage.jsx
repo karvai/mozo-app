@@ -78,6 +78,7 @@ export default function ProfilePage({ currentUser, setIsDarkTheme }) {
 	const [myDVDMovies, setDVDMovies] = useState([])
 	const [myBDMovies, setBDMovies] = useState([])
 	const [myUBDMovies, setUBDMovies] = useState([])
+	const [myRecomMovies, setRecomMovies] = useState([])
 
 	const dbUsers = base.firestore().collection('users')
 
@@ -91,13 +92,14 @@ export default function ProfilePage({ currentUser, setIsDarkTheme }) {
 					ownDVD: [],
 					ownBD: [],
 					ownUBD: [],
+					recommendation: [],
 				})
 				.then(() => {
 					setEmail('')
 					setPassword('')
 					setError()
 				})
-				.catch((e) => console.warn(e))
+				.catch((e) => console.error(e))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cred])
 
@@ -107,7 +109,7 @@ export default function ProfilePage({ currentUser, setIsDarkTheme }) {
 				.doc(currentUser.uid)
 				.get()
 				.then((doc) => setMyCollection(doc.data()))
-				.catch((e) => console.warn(e))
+				.catch((e) => console.error(e))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentUser])
 
@@ -127,6 +129,10 @@ export default function ProfilePage({ currentUser, setIsDarkTheme }) {
 		!!myCollection && myCollection.ownUBD !== 0 && myCollection.ownUBD.map((id) => tmdbAPI.getMovieDetail(id).then((data) => setUBDMovies((prev) => [...prev, data])))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [!!myCollection && myCollection.ownUBD])
+	useEffect(() => {
+		!!myCollection && myCollection.recommendation !== 0 && myCollection.recommendation.map((id) => tmdbAPI.getMovieDetail(id).then((data) => setRecomMovies((prev) => [...prev, data])))
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [!!myCollection && myCollection.recommendation])
 
 	const handleSignIn = () => {
 		base.auth()
@@ -182,7 +188,7 @@ export default function ProfilePage({ currentUser, setIsDarkTheme }) {
 				setBDMovies([])
 				setUBDMovies([])
 			})
-			.catch((e) => console.warn(e))
+			.catch((e) => console.error(e))
 	}
 
 	return !!currentUser ? (
@@ -194,6 +200,7 @@ export default function ProfilePage({ currentUser, setIsDarkTheme }) {
 					{myDVDMovies.length !== 0 && <MoviesSlider catTitle='DVD' movies={myDVDMovies} />}
 					{myBDMovies.length !== 0 && <MoviesSlider catTitle='Blu-Ray' movies={myBDMovies} />}
 					{myUBDMovies.length !== 0 && <MoviesSlider catTitle='Ultra HD Blu-Ray' movies={myUBDMovies} />}
+					{myRecomMovies.length !== 0 && <MoviesSlider catTitle='Recommendations' movies={myRecomMovies} />}
 				</>
 			) : (
 				<p className='center' style={{ padding: '50px 0' }}>

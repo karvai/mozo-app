@@ -18,7 +18,7 @@ function MoviePersonPage({ match }) {
 		tmdbAPI
 			.getPersonDetail(match.params.id)
 			.then((data) => setPerson(data))
-			.catch((e) => console.warn(e))
+			.catch((e) => console.error(e))
 
 		tmdbAPI
 			.getMovieCredits(match.params.id)
@@ -41,7 +41,7 @@ function MoviePersonPage({ match }) {
 						})
 				)
 			})
-			.catch((e) => console.warn(e))
+			.catch((e) => console.error(e))
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
@@ -50,8 +50,6 @@ function MoviePersonPage({ match }) {
 		bio.current.style.height = 'auto'
 		e.target.style.display = 'none'
 	}
-
-	!!credits && console.log(credits[0].value.map((item) => item.release_date))
 
 	return (
 		!!person && (

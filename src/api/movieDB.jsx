@@ -12,6 +12,9 @@ export const tmdbAPI = {
 	getMovieDetail(id) {
 		return instance.get(`movie/${id}?${settings}`).then((response) => response.data)
 	},
+	getRecommendations(id) {
+		return instance.get(`movie/${id}/recommendations?${settings}`).then((response) => response.data.results)
+	},
 	getMovieReleaseRating(id) {
 		return instance.get(`movie/${id}/release_dates?api_key=${apiKey}`).then((response) => response.data.results)
 	},

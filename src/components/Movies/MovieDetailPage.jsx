@@ -10,6 +10,8 @@ import { ReactComponent as MetacriticIcon } from '../../assets/icons/Metacritic.
 import { Showroom, PersonCard, Paragraph, Title, Genre, MetacriticColor, Video, MovieDetailHeader, PageWrapper, CircleSeparator, SVG } from './styles'
 import { Link, withRouter } from 'react-router-dom'
 import { timeConvert, formatDate } from '../func'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 import base from '../../api/firebase'
 
 function MovieDetailPage({ match, currentUser, isDarkTheme }) {
@@ -22,14 +24,16 @@ function MovieDetailPage({ match, currentUser, isDarkTheme }) {
 	const [ownDVD, setOwnDVD] = useState()
 	const [ownBD, setOwnBD] = useState()
 	const [ownUBD, setOwnUBD] = useState()
+	const [recommendations, setRecommendations] = useState()
 
 	const dbUsers = base.firestore().collection('users')
+	const ownAnyDisk = ownDVD || ownBD || ownUBD
 
 	useEffect(() => {
 		tmdbAPI
 			.getMovieDetail(match.params.id)
 			.then((data) => setMovie(data))
-			.catch((e) => console.warn(e))
+			.catch((e) => console.error(e))
 
 		tmdbAPI
 			.getMovieReleaseRating(match.params.id)
@@ -44,7 +48,7 @@ function MovieDetailPage({ match, currentUser, isDarkTheme }) {
 				}
 				getRating('GB') && getRating('US')
 			})
-			.catch((e) => console.warn(e))
+			.catch((e) => console.error(e))
 
 		tmdbAPI
 			.getMovieVideos(match.params.id)
@@ -53,17 +57,42 @@ function MovieDetailPage({ match, currentUser, isDarkTheme }) {
 				const official = data.filter((item) => item.name.toLowerCase().includes('official'))
 				data.length !== 0 && trailer.length !== 0 ? (official.length !== 0 ? setMovieVideo(official[0]) : setMovieVideo(trailer[0])) : setMovieVideo(data[0])
 			})
-			.catch((e) => console.warn(e))
+			.catch((e) => console.error(e))
 
 		tmdbAPI
 			.getMovieCast(match.params.id)
 			.then((data) => {
 				setMovieCast(data)
 			})
-			.catch((e) => console.warn(e))
+			.catch((e) => console.error(e))
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+
+	useEffect(() => {
+		!!movie &&
+			ownAnyDisk &&
+			tmdbAPI
+				.getRecommendations(match.params.id)
+				.then((results) => {
+					setRecommendations(results.length !== 0 && results[0].id)
+				})
+				.catch((e) => console.error(e))
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ownAnyDisk])
+
+	useEffect(() => {
+		if (!!currentUser && !!recommendations) {
+			ownAnyDisk
+				? dbUsers.doc(currentUser.uid).update({
+						recommendation: firebase.firestore.FieldValue.arrayUnion(recommendations),
+				  })
+				: dbUsers.doc(currentUser.uid).update({
+						recommendation: firebase.firestore.FieldValue.arrayRemove(recommendations),
+				  })
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ownAnyDisk, recommendations])
 
 	useEffect(() => {
 		!!movie &&
@@ -73,7 +102,7 @@ function MovieDetailPage({ match, currentUser, isDarkTheme }) {
 				.then((data) => {
 					data.Ratings.map((item) => setMovieRatings((current) => ({ ...current, [item.Source.replace(/\s/g, '')]: parseInt(item.Value.replace('.', '')) })))
 				})
-				.catch((e) => console.warn(e))
+				.catch((e) => console.error(e))
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [movie])
@@ -90,7 +119,7 @@ function MovieDetailPage({ match, currentUser, isDarkTheme }) {
 					doc.data().ownBD.includes(movie.id) ? setOwnBD(true) : setOwnBD(false)
 					doc.data().ownUBD.includes(movie.id) ? setOwnUBD(true) : setOwnUBD(false)
 				})
-				.catch((e) => console.warn(e))
+				.catch((e) => console.error(e))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentUser, movie])
 
@@ -108,8 +137,6 @@ function MovieDetailPage({ match, currentUser, isDarkTheme }) {
 					.catch((err) => console.error(err))
 			})
 	}
-
-	const ownAnyDisk = ownDVD || ownBD || ownUBD
 
 	const toggleDVD = () => {
 		dbUsers
