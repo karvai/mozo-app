@@ -43,7 +43,7 @@ export const ContentWrapper = styled.div`
 	}
 `
 
-const dictionary = ['(uk Import)', '<region 2 Dvd, Sealed>', '<region 1 Dvd, Sealed>', '4k Ultra Hd', '(DVD + Ultraviolet Digital Copy)', '<region A Bluray, Sealed>', 'Blu-ray', '<region B Bluray, Sealed>']
+const dictionary = ['(uk Import)', '<region 2 Dvd, Sealed>', '<region 1 Dvd, Sealed>', '4k Ultra Hd', '(DVD + Ultraviolet Digital Copy)', '<region A Bluray, Sealed>', 'Blu-ray', '<region B Bluray, Sealed>', 'Standard Definition', 'Widescreen', 'Blu-ray+DVD', ', Movies', 'by Warner Brothers', 'Warner Bros.', '(Bilingual) Yes', 'Extended Cut', 'with UltraViolet', '+ Digital HD', 'Walmart Exclusive', '4K Ultra HD', 'Includes Digital Copy', '[UltraViolet]', 'DVD', 'Digital Copy', '[SteelBook]', 'Only @ Best Buy', '()', '[]']
 
 const filterUsingDict = (word, dic) => {
 	dic.forEach((w) => (word = word.replace(w, '')))
