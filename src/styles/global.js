@@ -41,7 +41,7 @@ export const GlobalStyles = createGlobalStyle`
 	}
 
 	.button {
-	margin: 0 1rem;
+	margin: 0 .7rem;
 	color: ${({ theme }) => theme.colors.text};
 	background-color: ${({ theme }) => theme.colors.navBar};
 	padding: 10px 20px;

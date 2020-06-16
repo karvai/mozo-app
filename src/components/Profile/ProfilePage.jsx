@@ -12,6 +12,11 @@ const ProfileWrapper = styled.div`
 		width: 100%;
 		text-align: center;
 	}
+	p {
+		text-align: center;
+		font-size: 14px;
+		margin: 0 20px;
+	}
 `
 
 const LoginWrapper = styled.div`
@@ -204,7 +209,7 @@ export default function ProfilePage({ currentUser, setIsDarkTheme }) {
 				</>
 			) : (
 				<p className='center' style={{ padding: '50px 0' }}>
-					Start adding your movies to the collection in the Movies tab.
+					Start adding your movies to the collection in the Movies tab
 				</p>
 			)}
 			{!!error && <p className='error'>{error}</p>}
