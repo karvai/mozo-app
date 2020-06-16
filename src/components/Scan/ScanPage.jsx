@@ -5,10 +5,11 @@ import { upcitemdbAPI } from '../../api/upcitemDB'
 import { withRouter } from 'react-router-dom'
 
 export const ContentWrapper = styled.div`
+	overflow: visible;
 	p {
 		font-size: 12px;
 		position: fixed;
-		top: 0%;
+		bottom: 61px;
 		z-index: 1;
 		text-align: center;
 		padding: 20px;
@@ -21,6 +22,15 @@ export const ContentWrapper = styled.div`
 		top: 50%;
 		transform: translate(-50%, -50%);
 	}
+	select {
+		position: fixed;
+		padding: 5px;
+		border-radius: 5px;
+		left: 50%;
+		top: 30px;
+		transform: translate(-50%, 0);
+		z-index: 2;
+	}
 	#interactive {
 		video {
 			position: fixed;
@@ -30,20 +40,14 @@ export const ContentWrapper = styled.div`
 			min-width: 100%;
 			min-height: 100%;
 		}
-		canvas {
-			display: none;
-		}
 	}
 `
 
-const dictionary = ['<region 2 Dvd, Sealed>', '<region 1 Dvd, Sealed>', '4k Ultra Hd', '(DVD + Ultraviolet Digital Copy)', '<region A Bluray, Sealed>', '<region B Bluray, Sealed>']
+const dictionary = ['(uk Import)', '<region 2 Dvd, Sealed>', '<region 1 Dvd, Sealed>', '4k Ultra Hd', '(DVD + Ultraviolet Digital Copy)', '<region A Bluray, Sealed>', 'Blu-ray', '<region B Bluray, Sealed>']
 
 const filterUsingDict = (word, dic) => {
-	let newWord = ''
-	dic.forEach((item) => {
-		newWord = word.toLowerCase().replace(item.toLowerCase(), '')
-	})
-	return newWord.trim()
+	dic.forEach((w) => (word = word.replace(w, '')))
+	return word.trim()
 }
 
 const orderOccurrence = (arr) => {
@@ -63,39 +67,44 @@ const orderOccurrence = (arr) => {
 function ScanPage({ searchHandler, history }) {
 	const [isCameraAvailable, setCameraAvailable] = useState(true)
 	const [barcode, setBarcode] = useState()
-	const [movieTitle, setMovieTitle] = useState()
 	const [scanAgainToggle, setScanAgainToggle] = useState()
-	const [backCamera, setBackCamera] = useState([])
+	const [camAvailable, setCamAvailable] = useState([])
+	const [currentCamera, setCurrentCamera] = useState(localStorage.getItem('currentCamera') || '')
 	const [errorMessage, setErrorMessage] = useState(false)
 
 	useEffect(() => {
-		//// camera is not enabled
+		!!navigator.getUserMedia &&
+			navigator.mediaDevices
+				.enumerateDevices()
+				.then((devices) => {
+					devices.forEach((device) => {
+						if (device.kind === 'videoinput') {
+							setCamAvailable((prev) => [...prev, device.deviceId])
+						}
+					})
+				})
+				.catch((err) => {
+					alert(console.log(err.message))
+				})
+	}, [])
+
+	useEffect(() => {
+		localStorage.setItem('currentCamera', currentCamera)
+	}, [currentCamera])
+
+	useEffect(() => {
 		!!navigator.getUserMedia &&
 			navigator.getUserMedia(
 				{ video: true },
 				() => {
 					setCameraAvailable(true)
-
-					navigator.mediaDevices
-						.enumerateDevices()
-						.then((devices) => {
-							devices.forEach((device) => {
-								if (device.kind === 'videoinput' && device.label.toLowerCase().includes('back')) {
-									setBackCamera((prev) => [...prev, device.deviceId])
-								}
-							})
-						})
-						.catch((err) => {
-							alert(console.log(err.message))
-						})
-
 					Quagga.init(
 						{
 							inputStream: {
 								type: 'LiveStream',
 								constraints: {
 									facingMode: 'environment',
-									deviceId: backCamera[backCamera.length - 1],
+									deviceId: currentCamera,
 								},
 							},
 							locator: {
@@ -108,7 +117,10 @@ function ScanPage({ searchHandler, history }) {
 							},
 						},
 						(err) => {
-							!!err && console.warn(err)
+							if (err) {
+								console.log(err)
+								return
+							}
 							Quagga.start()
 						}
 					)
@@ -130,14 +142,17 @@ function ScanPage({ searchHandler, history }) {
 		// when unmounted stop quagga
 		return () => Quagga.stop()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [scanAgainToggle])
+	}, [scanAgainToggle, currentCamera])
 
 	useEffect(() => {
 		!!barcode &&
 			upcitemdbAPI
 				.getMovieNameByBarcode(barcode)
 				.then((data) => {
-					!!data && !!data.items[0].title && setMovieTitle(filterUsingDict(data.items[0].title, dictionary))
+					if (!!data && !!data.items[0].title) {
+						searchHandler(filterUsingDict(data.items[0].title, dictionary))
+						history.push('/')
+					}
 				})
 				.catch((e) => {
 					setErrorMessage(true)
@@ -147,18 +162,21 @@ function ScanPage({ searchHandler, history }) {
 					}, 1500)
 					setBarcode()
 				})
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [barcode])
-
-	if (!!movieTitle) {
-		searchHandler(movieTitle)
-		history.push('/')
-	}
 
 	return (
 		<ContentWrapper>
-			{isCameraAvailable ? <p>Point your camera at a barcode and avoid glare and shadows</p> : <p>You need to allow camera in your browser to scan the barcode</p>}
+			<select onChange={(e) => setCurrentCamera(e.target.value)} value={currentCamera}>
+				{camAvailable.map((item, index) => (
+					<option key={item} value={item}>
+						Camera {index + 1}
+					</option>
+				))}
+			</select>
 			<div id='interactive' className='viewport' />
 			{!!errorMessage && <p className='notFound'>Couldn't find this movie in database</p>}
+			{isCameraAvailable ? <p>Point your camera at a barcode and avoid glare and shadows </p> : <p>You need to allow camera in your browser to scan the barcode</p>}
 		</ContentWrapper>
 	)
 }
