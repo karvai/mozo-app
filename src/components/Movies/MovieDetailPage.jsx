@@ -79,7 +79,7 @@ function MovieDetailPage({ match, currentUser, isDarkTheme }) {
 				.getRecommendations(match.params.id)
 				.then((results) => {
 					if (results.length !== 0) {
-						results.some((item) => {
+						results.find((item) => {
 							if (!ownListArr.includes(item.id)) {
 								setRecommendations(item.id)
 								return true

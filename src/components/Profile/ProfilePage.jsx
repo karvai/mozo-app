@@ -161,27 +161,23 @@ export default function ProfilePage({ currentUser, setIsDarkTheme }) {
 	const handleDeleteUser = () => {
 		const result = window.confirm(`Are you sure you want to delete account with email ${currentUser.email}?`)
 		if (result) {
-			try {
-				base.auth()
-					.currentUser.delete()
-					.then(() => {
-						setMyWishlistMovies([])
-						setDVDMovies([])
-						setBDMovies([])
-						setUBDMovies([])
-						setError('The account was deleted successfully!')
-						setTimeout(() => {
-							setError('')
-						}, 3000)
-					})
-					.catch((error) =>
-						setTimeout(() => {
-							setError(error.message)
-						}, 3000)
-					)
-			} catch {
-				console.log('You ne')
-			}
+			base.auth()
+				.currentUser.delete()
+				.then(() => {
+					setMyWishlistMovies([])
+					setDVDMovies([])
+					setBDMovies([])
+					setUBDMovies([])
+					setError('The account was deleted successfully!')
+					setTimeout(() => {
+						setError('')
+					}, 3000)
+				})
+				.catch((error) =>
+					setTimeout(() => {
+						setError(error.message)
+					}, 3000)
+				)
 		}
 	}
 
