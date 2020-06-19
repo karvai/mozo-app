@@ -64,7 +64,7 @@ const orderOccurrence = (arr) => {
 	return max
 }
 
-function ScanPage({ searchHandler, history }) {
+function ScanPage({ searchHandler, history, currentUser }) {
 	const [isCameraAvailable, setCameraAvailable] = useState(true)
 	const [barcode, setBarcode] = useState()
 	const [scanAgainToggle, setScanAgainToggle] = useState()
@@ -92,57 +92,61 @@ function ScanPage({ searchHandler, history }) {
 		localStorage.setItem('currentCamera', currentCamera)
 	}, [currentCamera])
 
+	console.log(currentUser)
+
 	useEffect(() => {
-		!!navigator.getUserMedia &&
-			navigator.getUserMedia(
-				{ video: true },
-				() => {
-					setCameraAvailable(true)
-					Quagga.init(
-						{
-							inputStream: {
-								type: 'LiveStream',
-								constraints: {
-									facingMode: 'environment',
-									deviceId: currentCamera,
+		currentUser !== null
+			? !!navigator.getUserMedia &&
+			  navigator.getUserMedia(
+					{ video: true },
+					() => {
+						setCameraAvailable(true)
+						Quagga.init(
+							{
+								inputStream: {
+									type: 'LiveStream',
+									constraints: {
+										facingMode: 'environment',
+										deviceId: currentCamera,
+									},
+								},
+								locator: {
+									patchSize: 'medium',
+									halfSample: true,
+								},
+								numOfWorkers: navigator.hardwareConcurrency,
+								decoder: {
+									readers: ['ean_reader', 'upc_reader'],
 								},
 							},
-							locator: {
-								patchSize: 'medium',
-								halfSample: true,
-							},
-							numOfWorkers: navigator.hardwareConcurrency,
-							decoder: {
-								readers: ['ean_reader', 'upc_reader'],
-							},
-						},
-						(err) => {
-							if (err) {
-								console.error(err)
-								return
+							(err) => {
+								if (err) {
+									console.error(err)
+									return
+								}
+								Quagga.start()
 							}
-							Quagga.start()
-						}
-					)
-					let collectionResults = []
-					Quagga.onDetected((e) => {
-						collectionResults.push(e.codeResult.code)
-						if (collectionResults.length > 10) {
-							setBarcode(orderOccurrence(collectionResults))
-							collectionResults = []
-							Quagga.stop()
-						}
-					})
-				},
-				// camera is not enabled
-				() => {
-					setCameraAvailable(false)
-				}
-			)
+						)
+						let collectionResults = []
+						Quagga.onDetected((e) => {
+							collectionResults.push(e.codeResult.code)
+							if (collectionResults.length > 10) {
+								setBarcode(orderOccurrence(collectionResults))
+								collectionResults = []
+								Quagga.stop()
+							}
+						})
+					},
+					// camera is not enabled
+					() => {
+						setCameraAvailable(false)
+					}
+			  )
+			: history.push('/profile')
 		// when unmounted stop quagga
 		return () => Quagga.stop()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [scanAgainToggle, currentCamera])
+	}, [scanAgainToggle, currentCamera, currentUser])
 
 	useEffect(() => {
 		!!barcode &&

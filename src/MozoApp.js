@@ -48,7 +48,7 @@ export default function MozoApp() {
 						</Route>
 						<Route exact path='/movie/:id' render={() => <MovieDetailPage currentUser={currentUser} isDarkTheme={isDarkTheme} />} />
 						<Route exact path='/movie/p/:id' component={MoviePersonPage} />
-						<Route exact path='/scan' render={() => <ScanPage searchHandler={searchHandler} />} />
+						<Route exact path='/scan' render={() => <ScanPage searchHandler={searchHandler} currentUser={currentUser} />} />
 						<Route exact path='/profile' render={() => <ProfilePage currentUser={currentUser} setIsDarkTheme={setIsDarkTheme} />} />
 					</Switch>
 				</BottomPadding>
