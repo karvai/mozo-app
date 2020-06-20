@@ -6,7 +6,7 @@ export default function MoviesSearchController({ apiRequest, searchQuery }) {
 	const [page, setPage] = useState(1)
 
 	useEffect(() => {
-		if (searchQuery !== '') {
+		if (!!searchQuery) {
 			apiRequest(searchQuery, page)
 				.then((data) => setMovies({ ...data, results: [...movies.results, ...data.results] }))
 				.catch((e) => console.error(e))
@@ -18,7 +18,7 @@ export default function MoviesSearchController({ apiRequest, searchQuery }) {
 	}, [page])
 
 	useEffect(() => {
-		if (searchQuery !== '') {
+		if (!!searchQuery) {
 			apiRequest(searchQuery, 1)
 				.then((data) => setMovies(data))
 				.catch((e) => console.error(e))
@@ -33,5 +33,5 @@ export default function MoviesSearchController({ apiRequest, searchQuery }) {
 		page < movies.total_pages && setPage(page + 1)
 	}
 
-	return <>{searchQuery !== '' && <MoviesSliderPagination catTitle={movies.total_results !== 0 ? `Results for "${searchQuery}"` : `No results found for "${searchQuery}"`} movies={movies.results} nextPage={nextPage} />}</>
+	return <>{searchQuery && <MoviesSliderPagination catTitle={movies.total_results !== 0 ? `Results for "${searchQuery}"` : `No results found for "${searchQuery}"`} movies={movies.results} nextPage={nextPage} />}</>
 }

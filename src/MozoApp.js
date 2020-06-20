@@ -16,7 +16,7 @@ const BottomPadding = styled.div`
 `
 
 export default function MozoApp() {
-	const [searchQuery, setSearchQuery] = useState('')
+	const [searchQuery, setSearchQuery] = useState()
 	const [currentUser, setCurrentUser] = useState()
 	const [isDarkTheme, setIsDarkTheme] = useState(!!localStorage.getItem('isDarkTheme') ? JSON.parse(localStorage.getItem('isDarkTheme').toLowerCase()) : true)
 
@@ -28,27 +28,19 @@ export default function MozoApp() {
 		localStorage.setItem('isDarkTheme', isDarkTheme)
 	}, [isDarkTheme])
 
-	const searchHandler = (word) => {
-		if (word !== '') {
-			setSearchQuery(word)
-		} else {
-			setSearchQuery('')
-		}
-	}
-
 	return (
 		<ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
 			<GlobalStyles />
 			<BrowserRouter>
 				<BottomPadding>
 					<Switch>
-						<Route exact path='/' render={() => <MoviesPage searchQuery={searchQuery} searchHandler={searchHandler} />} />
+						<Route exact path='/' render={() => <MoviesPage searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
 						<Route exact path={['/movie', '/movie/p']}>
 							<Redirect to='/' />
 						</Route>
 						<Route exact path='/movie/:id' render={() => <MovieDetailPage currentUser={currentUser} isDarkTheme={isDarkTheme} />} />
 						<Route exact path='/movie/p/:id' component={MoviePersonPage} />
-						<Route exact path='/scan' render={() => <ScanPage searchHandler={searchHandler} currentUser={currentUser} />} />
+						<Route exact path='/scan' render={() => <ScanPage setSearchQuery={setSearchQuery} currentUser={currentUser} />} />
 						<Route exact path='/profile' render={() => <ProfilePage currentUser={currentUser} setIsDarkTheme={setIsDarkTheme} />} />
 					</Switch>
 				</BottomPadding>

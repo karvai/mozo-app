@@ -64,7 +64,7 @@ const orderOccurrence = (arr) => {
 	return max
 }
 
-function ScanPage({ searchHandler, history, currentUser }) {
+function ScanPage({ setSearchQuery, history, currentUser }) {
 	const [isCameraAvailable, setCameraAvailable] = useState(true)
 	const [barcode, setBarcode] = useState()
 	const [scanAgainToggle, setScanAgainToggle] = useState()
@@ -154,7 +154,7 @@ function ScanPage({ searchHandler, history, currentUser }) {
 				.getMovieNameByBarcode(barcode)
 				.then((data) => {
 					if (!!data && !!data.items[0].title) {
-						searchHandler(filterUsingDict(data.items[0].title, dictionary))
+						setSearchQuery(filterUsingDict(data.items[0].title, dictionary))
 						history.push('/')
 					}
 				})
