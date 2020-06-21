@@ -43,10 +43,10 @@ export const ContentWrapper = styled.div`
 	}
 `
 
-const dictionary = ['(uk Import)', '<region 2 Dvd, Sealed>', '<region 1 Dvd, Sealed>', '4k Ultra Hd', '(DVD + Ultraviolet Digital Copy)', '<region A Bluray, Sealed>', 'Blu-ray', '<region B Bluray, Sealed>', 'Standard Definition', 'Widescreen', 'Blu-ray+DVD', ', Movies', 'by Warner Brothers', 'Warner Bros.', '(Bilingual) Yes', 'Extended Cut', 'with UltraViolet', '+ Digital HD', 'Walmart Exclusive', '4K Ultra HD', 'Includes Digital Copy', '[UltraViolet]', 'DVD', 'Digital Copy', '[SteelBook]', 'Only @ Best Buy', '()', '[]']
+const dictionary = ['(uk Import)', '<region 2 Dvd, Sealed>', '<region 1 Dvd, Sealed>', '4k Ultra Hd', '(DVD + Ultraviolet Digital Copy)', '<region A Bluray, Sealed>', 'Blu-ray', '<region B Bluray, Sealed>', 'Standard Definition', 'Widescreen', 'Blu-ray+DVD', ', Movies', 'by Warner Brothers', 'Warner Bros.', '(Bilingual) Yes', 'Extended Cut', 'with UltraViolet', '+ Digital HD', 'Walmart Exclusive', '4K Ultra HD', 'Includes Digital Copy', '[UltraViolet]', 'DVD', 'Digital Copy', '[SteelBook]', 'Only @ Best Buy', 'Free Shipping', '[region B]', '[region A]', 'trilogy', 'diology', 'quadrology', 'Id11z -', '()', '[]', '- -']
 
 const filterUsingDict = (word, dic) => {
-	dic.forEach((w) => (word = word.replace(w, '')))
+	dic.forEach((w) => (word = word.toLowerCase().replace(w.toLowerCase(), '')))
 	return word.trim()
 }
 
@@ -92,8 +92,6 @@ function ScanPage({ setSearchQuery, history, currentUser }) {
 		localStorage.setItem('currentCamera', currentCamera)
 	}, [currentCamera])
 
-	console.log(currentUser)
-
 	useEffect(() => {
 		currentUser !== null
 			? !!navigator.getUserMedia &&
@@ -130,7 +128,7 @@ function ScanPage({ setSearchQuery, history, currentUser }) {
 						let collectionResults = []
 						Quagga.onDetected((e) => {
 							collectionResults.push(e.codeResult.code)
-							if (collectionResults.length > 10) {
+							if (collectionResults.length > 15) {
 								setBarcode(orderOccurrence(collectionResults))
 								collectionResults = []
 								Quagga.stop()
@@ -154,6 +152,7 @@ function ScanPage({ setSearchQuery, history, currentUser }) {
 				.getMovieNameByBarcode(barcode)
 				.then((data) => {
 					if (!!data && !!data.items[0].title) {
+						console.log(`Barcode is ${barcode} and fetched from database: ${data.items[0].title}`)
 						setSearchQuery(filterUsingDict(data.items[0].title, dictionary))
 						history.push('/')
 					}
