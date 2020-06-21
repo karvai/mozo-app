@@ -1,8 +1,7 @@
 import React from 'react'
 import { tmdbAPI } from '../../api/movieDB'
 import { SearchBar, HideSearch } from './styles'
-import MoviesCatController from './MoviesCatController'
-import MoviesSearchController from './MoviesSearchController'
+import MoviesController from './MoviesController'
 
 const moviesHomeLayout = [
 	{ title: 'Now Playing', apiRequest: tmdbAPI.getNowPlaying },
@@ -43,11 +42,11 @@ export default function MoviesPage({ searchQuery, setSearchQuery }) {
 				</svg>
 			</SearchBar>
 			<HideSearch className={!!searchQuery && 'active'}>
-				<MoviesSearchController searchQuery={searchQuery} apiRequest={tmdbAPI.getSearchResult} />
+				<MoviesController searchQuery={searchQuery} apiRequest={tmdbAPI.getSearchResult} />
 			</HideSearch>
 
 			{moviesHomeLayout.map((category, index) => (
-				<MoviesCatController key={index} catTitle={category.title} apiRequest={category.apiRequest} />
+				<MoviesController key={index} catTitle={category.title} apiRequest={category.apiRequest} />
 			))}
 		</>
 	)
