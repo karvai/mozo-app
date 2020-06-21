@@ -8,7 +8,6 @@ const instance = Axios.create({
 })
 
 export const tmdbAPI = {
-	// Movies
 	getMovieDetail(id) {
 		return instance.get(`movie/${id}?${settings}`).then((response) => response.data)
 	},

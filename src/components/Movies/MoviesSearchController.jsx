@@ -18,12 +18,12 @@ export default function MoviesSearchController({ apiRequest, searchQuery }) {
 	}, [page])
 
 	useEffect(() => {
+		setPage(1)
 		if (!!searchQuery) {
-			apiRequest(searchQuery, 1)
+			apiRequest(searchQuery, page)
 				.then((data) => setMovies(data))
 				.catch((e) => console.error(e))
 		} else {
-			setPage(1)
 			setMovies({ results: [] })
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
