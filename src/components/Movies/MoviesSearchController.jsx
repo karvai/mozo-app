@@ -3,31 +3,25 @@ import MoviesSliderPagination from './MoviesSliderPagination'
 
 export default function MoviesSearchController({ apiRequest, searchQuery }) {
 	const [movies, setMovies] = useState({ results: [] })
-	const [page, setPage] = useState(1)
-
-	useEffect(() => {
-		if (!!searchQuery) {
-			apiRequest(searchQuery, page)
-				.then((data) => setMovies({ ...data, results: [...movies.results, ...data.results] }))
-				.catch((e) => console.error(e))
-		} else {
-			setPage(1)
-			setMovies({ results: [] })
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [page])
+	const [page, setPage] = useState()
 
 	useEffect(() => {
 		setPage(1)
-		if (!!searchQuery) {
-			apiRequest(searchQuery, page)
-				.then((data) => setMovies(data))
-				.catch((e) => console.error(e))
-		} else {
-			setMovies({ results: [] })
-		}
+		!!searchQuery
+			? apiRequest(searchQuery, page)
+					.then((data) => setMovies(data))
+					.catch((e) => console.error(e))
+			: setMovies({ results: [] })
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [searchQuery])
+
+	useEffect(() => {
+		!!searchQuery &&
+			apiRequest(searchQuery, page)
+				.then((data) => setMovies({ ...data, results: [...movies.results, ...data.results] }))
+				.catch((e) => console.error(e))
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [page])
 
 	const nextPage = () => {
 		page < movies.total_pages && setPage(page + 1)

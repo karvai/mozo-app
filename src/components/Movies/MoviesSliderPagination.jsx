@@ -4,7 +4,10 @@ import MovieCard from './MovieCard'
 
 export default function MoviesSlider({ catTitle, movies, nextPage }) {
 	const infinityScroll = (e) => {
-		e.target.scrollLeft + e.target.clientWidth > e.target.scrollWidth - 800 && nextPage()
+		e.target.scrollLeft + e.target.clientWidth > e.target.scrollWidth - 1200 &&
+			setTimeout(() => {
+				nextPage()
+			}, 200)
 	}
 
 	return (

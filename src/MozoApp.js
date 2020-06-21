@@ -16,7 +16,7 @@ const BottomPadding = styled.div`
 `
 
 export default function MozoApp() {
-	const [searchQuery, setSearchQuery] = useState()
+	const [searchQuery, setSearchQuery] = useState('')
 	const [currentUser, setCurrentUser] = useState()
 	const [isDarkTheme, setIsDarkTheme] = useState(!!localStorage.getItem('isDarkTheme') ? JSON.parse(localStorage.getItem('isDarkTheme').toLowerCase()) : true)
 
