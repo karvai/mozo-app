@@ -37,8 +37,7 @@ export default function MoviesPage({ searchQuery, setSearchQuery }) {
 			<SearchBar>
 				<input type='text' placeholder='Search' value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} />
 				{!!searchQuery ? (
-					<svg width={512} height={512} viewBox='0 0 512 512' onClick={() => setSearchQuery('')} style={{ cursor: 'pointer' }}>
-						<title>{'ionicons-v5-m'}</title>
+					<svg viewBox='0 0 512 512' onClick={() => setSearchQuery('')} style={{ cursor: 'pointer' }}>
 						<path d='M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z' fill='none' strokeMiterlimit={10} strokeWidth={45} />
 						<path fill='none' strokeLinecap='round' strokeLinejoin='round' strokeWidth={45} d='M320 320L192 192M192 320l128-128' />
 					</svg>
