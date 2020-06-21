@@ -36,10 +36,18 @@ export default function MoviesPage({ searchQuery, setSearchQuery }) {
 		<>
 			<SearchBar>
 				<input type='text' placeholder='Search' value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} />
-				<svg viewBox='0 0 512 512'>
-					<path d='M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z' fill='none' strokeMiterlimit={10} strokeWidth={60} />
-					<path fill='none' strokeLinecap='round' strokeMiterlimit={10} strokeWidth={60} d='M338.29 338.29L448 448' />
-				</svg>
+				{!!searchQuery ? (
+					<svg width={512} height={512} viewBox='0 0 512 512' onClick={() => setSearchQuery('')} style={{ cursor: 'pointer' }}>
+						<title>{'ionicons-v5-m'}</title>
+						<path d='M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z' fill='none' strokeMiterlimit={10} strokeWidth={45} />
+						<path fill='none' strokeLinecap='round' strokeLinejoin='round' strokeWidth={45} d='M320 320L192 192M192 320l128-128' />
+					</svg>
+				) : (
+					<svg viewBox='0 0 512 512'>
+						<path d='M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z' fill='none' strokeMiterlimit={10} strokeWidth={60} />
+						<path fill='none' strokeLinecap='round' strokeMiterlimit={10} strokeWidth={60} d='M338.29 338.29L448 448' />
+					</svg>
+				)}
 			</SearchBar>
 			<HideSearch className={!!searchQuery && 'active'}>
 				<MoviesController searchQuery={searchQuery} apiRequest={tmdbAPI.getSearchResult} />
