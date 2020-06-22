@@ -25,6 +25,7 @@ export const SearchBar = styled.div`
 	}
 	svg {
 		stroke: ${({ theme }) => theme.colors.subText};
+		fill: ${({ theme }) => theme.colors.subText};
 		width: 1.3rem;
 		height: auto;
 		margin: 0 0.5rem;
